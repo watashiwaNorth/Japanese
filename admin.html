@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel · Sakura Nihongo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Shippori+Mincho:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --bg:#F5F4F2;--sf:#fff;--sf2:#F9F8F6;
+  --ink:#16150F;--ink-m:#3A3830;--ink-s:#7A7568;
+  --red:#C1121F;--red-bg:rgba(193,18,31,.06);--red-bd:rgba(193,18,31,.2);
+  --gold:#C9973A;--gold-bg:rgba(201,151,58,.08);
+  --green:#0D7A55;--amber:#C08B1A;
+  --bd:#E8E5E0;--bd-f:#C1121F;
+  --sh-xs:0 1px 4px rgba(22,21,15,.06);--sh-sm:0 2px 12px rgba(22,21,15,.08);--sh-md:0 8px 32px rgba(22,21,15,.10);--sh-lg:0 24px 64px rgba(22,21,15,.14);
+  --r:12px;--rs:8px;--rx:6px;
+  --ff-s:'Shippori Mincho',serif;--ff:'DM Sans',sans-serif;--ff-j:'Noto Sans JP',sans-serif;
+  --t:.2s cubic-bezier(.25,.46,.45,.94);
+  --sw:260px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:15px}
+body{font-family:var(--ff);background:var(--bg);color:var(--ink);line-height:1.6;min-height:100vh}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink);position:relative;overflow:hidden}
+.login-wrap::before{content:'桜';position:absolute;font-family:var(--ff-j);font-size:28rem;color:rgba(255,255,255,.02);top:-15%;left:50%;transform:translateX(-50%);pointer-events:none;line-height:1}
+.login-wrap::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 80%,rgba(193,18,31,.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(201,151,58,.05) 0%,transparent 50%);pointer-events:none}
+.login-card{background:var(--sf);border-radius:20px;padding:48px;width:100%;max-width:420px;box-shadow:var(--sh-lg);position:relative;z-index:1}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-crest{width:64px;height:64px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--ff-j);font-size:1.6rem;color:#fff;margin:0 auto 12px;box-shadow:0 8px 24px rgba(193,18,31,.35)}
+.login-title{font-family:var(--ff-s);font-size:1.3rem;font-weight:700;color:var(--ink);margin-bottom:4px}
+.login-sub{font-size:.78rem;color:var(--ink-s);letter-spacing:.08em}
+.f-label{display:block;font-size:.72rem;font-weight:600;color:var(--ink-m);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.f-input{width:100%;padding:11px 14px;border:1.5px solid var(--bd);border-radius:var(--rs);font-family:var(--ff);font-size:.9rem;color:var(--ink);background:var(--sf);outline:none;transition:var(--t)}
+.f-input:focus{border-color:var(--bd-f);box-shadow:0 0 0 3px rgba(193,18,31,.1)}
+.f-group{margin-bottom:16px}
+.btn-login{width:100%;padding:12px;background:var(--red);color:#fff;border:none;border-radius:var(--rs);font-family:var(--ff);font-size:.875rem;font-weight:600;letter-spacing:.06em;cursor:pointer;transition:var(--t);margin-top:8px}
+.btn-login:hover{background:#A00D19;transform:translateY(-1px);box-shadow:0 4px 20px rgba(193,18,31,.35)}
+.login-err{color:var(--red);font-size:.8rem;text-align:center;margin-top:12px;min-height:20px}
+
+/* LAYOUT */
+.admin-layout{display:none;min-height:100vh}
+.admin-layout.active{display:flex}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);min-height:100vh;background:var(--ink);position:fixed;left:0;top:0;bottom:0;display:flex;flex-direction:column;z-index:200;border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+.sb-header{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sb-crest{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.sb-logo{width:38px;height:38px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--ff-j);font-size:1rem;color:#fff;flex-shrink:0}
+.sb-name{font-family:var(--ff-s);font-size:.95rem;color:#fff;font-weight:600}
+.sb-sub{font-size:.62rem;color:rgba(255,255,255,.25);letter-spacing:.12em;padding-left:50px;margin-top:2px}
+.sb-nav{padding:10px 0;flex:1}
+.sb-section{font-size:.58rem;color:rgba(255,255,255,.2);letter-spacing:.2em;text-transform:uppercase;padding:12px 20px 5px;font-weight:600}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 20px;color:rgba(255,255,255,.5);text-decoration:none;font-size:.82rem;font-weight:500;cursor:pointer;transition:var(--t);border:none;background:none;width:100%;text-align:left;border-right:2px solid transparent}
+.sb-link:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.04)}
+.sb-link.active{color:#fff;background:rgba(193,18,31,.15);border-right-color:var(--red)}
+.sb-link i{width:16px;font-size:.85rem;flex-shrink:0}
+.sb-link.view{color:rgba(201,151,58,.6);border-top:1px solid rgba(255,255,255,.04);margin-top:4px;padding-top:10px}
+.sb-link.view:hover{color:var(--gold)}
+.sb-foot{padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.btn-logout{display:flex;align-items:center;gap:8px;width:100%;padding:9px 14px;background:rgba(193,18,31,.12);border:1px solid rgba(193,18,31,.2);color:rgba(193,18,31,.8);border-radius:var(--rx);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--t);letter-spacing:.04em}
+.btn-logout:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* MAIN */
+.main-area{margin-left:var(--sw);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--sf);border-bottom:1px solid var(--bd);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh-xs)}
+.topbar-l{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--ink-s)}
+.topbar-l .sep{opacity:.35}
+.topbar-l .cur{color:var(--ink);font-weight:600}
+.topbar-r{display:flex;align-items:center;gap:10px}
+.tb-badge{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);border-radius:20px;padding:4px 12px;font-size:.7rem;font-weight:600;letter-spacing:.08em}
+.content{padding:28px;flex:1}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:block}
+.ph{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.ph-title{font-family:var(--ff-s);font-size:1.3rem;font-weight:700;color:var(--ink)}
+.ph-sub{font-size:.78rem;color:var(--ink-s);margin-top:3px}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin-bottom:28px}
+.stat-chip{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:18px 16px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--sh-xs);transition:var(--t);cursor:pointer}
+.stat-chip:hover{border-color:var(--red);box-shadow:var(--sh-sm);transform:translateY(-1px)}
+.stat-icon{width:34px;height:34px;background:var(--red-bg);border-radius:var(--rx);display:flex;align-items:center;justify-content:center;color:var(--red);font-size:.85rem;margin-bottom:4px}
+.stat-num{font-family:var(--ff-s);font-size:1.5rem;font-weight:700;color:var(--ink);line-height:1}
+.stat-lbl{font-size:.7rem;color:var(--ink-s);font-weight:500;letter-spacing:.04em}
+
+/* CARD */
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-xs)}
+.card-h{padding:16px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--sf2)}
+.card-hl{display:flex;align-items:center;gap:10px}
+.card-hi{width:30px;height:30px;background:var(--red-bg);border-radius:var(--rx);display:flex;align-items:center;justify-content:center;color:var(--red);font-size:.78rem}
+.card-ht{font-size:.85rem;font-weight:600;color:var(--ink)}
+.card-hs{font-size:.7rem;color:var(--ink-s);margin-top:1px}
+.card-b{padding:18px}
+
+/* FORMS */
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:.7rem;font-weight:600;color:var(--ink-m);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.fg input,.fg textarea,.fg select{width:100%;padding:9px 11px;border:1.5px solid var(--bd);border-radius:var(--rx);font-family:var(--ff);font-size:.875rem;color:var(--ink);background:var(--sf);outline:none;transition:var(--t);resize:vertical}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--bd-f);box-shadow:0 0 0 3px rgba(193,18,31,.08)}
+.fg textarea{min-height:76px}
+.fg-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--rx);font-family:var(--ff);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--t);border:1.5px solid transparent;letter-spacing:.03em;white-space:nowrap}
+.btn-sm{padding:5px 11px;font-size:.73rem}
+.btn-xs{padding:3px 9px;font-size:.68rem}
+.btn-p{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-p:hover{background:#A00D19;transform:translateY(-1px)}
+.btn-g{background:transparent;color:var(--ink-s);border-color:var(--bd)}
+.btn-g:hover{border-color:var(--ink-m);color:var(--ink);background:var(--sf2)}
+.btn-d{background:transparent;color:#DC2626;border-color:rgba(220,38,38,.25)}
+.btn-d:hover{background:#DC2626;color:#fff;border-color:#DC2626}
+.btn-w{background:transparent;color:var(--amber);border-color:rgba(192,139,26,.25)}
+.btn-w:hover{background:var(--amber);color:#fff;border-color:var(--amber)}
+.btn-s{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-s:hover{background:#0A6045}
+
+/* TABLE */
+.data-tbl{width:100%;border-collapse:collapse}
+.data-tbl th{text-align:left;font-size:.68rem;font-weight:700;color:var(--ink-s);letter-spacing:.1em;text-transform:uppercase;padding:0 10px 9px;border-bottom:1px solid var(--bd)}
+.data-tbl td{padding:10px;font-size:.8rem;color:var(--ink-m);border-bottom:1px solid var(--bg);vertical-align:middle}
+.data-tbl tr:last-child td{border-bottom:none}
+.data-tbl tr:hover td{background:var(--sf2)}
+.tbl-actions{display:flex;gap:5px}
+
+/* ITEM ROW */
+.item-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bd);transition:var(--t)}
+.item-row:last-child{border-bottom:none}
+.item-row:hover{background:var(--sf2)}
+.ir-handle{color:var(--ink-s);opacity:.35;cursor:grab;font-size:.72rem;flex-shrink:0}
+.ir-content{flex:1;min-width:0}
+.ir-title{font-size:.83rem;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ir-meta{font-size:.7rem;color:var(--ink-s);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ir-actions{display:flex;gap:5px;flex-shrink:0}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:.63rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-green{background:rgba(13,122,85,.1);color:var(--green)}
+.badge-gold{background:var(--gold-bg);color:var(--amber)}
+
+/* ADD ROW */
+.add-row{padding:12px 14px;border-top:1px solid var(--bd);background:var(--sf2)}
+.add-grid{display:grid;gap:7px}
+.add-grid input,.add-grid textarea,.add-grid select{padding:8px 11px;border:1.5px solid var(--bd);border-radius:var(--rx);font-family:var(--ff);font-size:.8rem;color:var(--ink);background:var(--sf);outline:none;transition:var(--t);width:100%}
+.add-grid input:focus,.add-grid textarea:focus,.add-grid select:focus{border-color:var(--bd-f);box-shadow:0 0 0 3px rgba(193,18,31,.08)}
+.add-foot{display:flex;align-items:center;gap:7px;margin-top:8px}
+
+/* IMG PREVIEW */
+.img-preview-box{width:100%;max-width:200px;height:78px;background:var(--bg);border:2px dashed var(--bd);border-radius:var(--rx);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px;cursor:pointer;transition:var(--t)}
+.img-preview-box:hover{border-color:var(--red)}
+.img-preview-box img{max-width:100%;max-height:100%;object-fit:contain}
+.img-preview-box .ph{font-size:.72rem;color:var(--ink-s);text-align:center;padding:8px}
+.gallery-thumb{width:46px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--bd);flex-shrink:0}
+
+/* TOAST */
+.toast-cnt{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:7px}
+.toast{background:var(--ink);color:#fff;padding:11px 16px 11px 13px;border-radius:var(--rs);font-size:.8rem;font-weight:500;display:flex;align-items:center;gap:9px;box-shadow:var(--sh-md);animation:tIn .25s ease,tOut .3s ease 2.8s forwards;min-width:220px;max-width:320px;border-left:3px solid var(--green)}
+.toast.err{border-left-color:var(--red)}
+.toast.warn{border-left-color:var(--amber)}
+.toast-ico{font-size:.88rem}
+.toast.err .toast-ico{color:#FF6B6B}
+.toast.warn .toast-ico{color:var(--gold)}
+.toast:not(.err):not(.warn) .toast-ico{color:#4DCA8F}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tOut{from{opacity:1}to{opacity:0;transform:translateX(10px)}}
+
+/* MODAL */
+.modal-bd{position:fixed;inset:0;background:rgba(16,15,12,.6);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;padding:18px}
+.modal-bd.open{display:flex}
+.modal-box{background:var(--sf);border-radius:14px;box-shadow:var(--sh-lg);width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:mIn .25s cubic-bezier(.25,.46,.45,.94)}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-h{padding:18px 22px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.modal-h h3{font-size:.9rem;font-weight:700;color:var(--ink)}
+.modal-cls{width:28px;height:28px;background:var(--bg);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-s);font-size:.78rem;transition:var(--t)}
+.modal-cls:hover{background:var(--red);color:#fff}
+.modal-body{padding:18px 22px}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:7px}
+
+/* EMPTY STATE */
+.empty-state{padding:40px 20px;text-align:center;color:var(--ink-s)}
+.empty-state i{font-size:2rem;opacity:.25;margin-bottom:10px;display:block}
+.empty-state p{font-size:.8rem}
+
+/* ORDER BTNS */
+.order-btns{display:flex;gap:3px}
+.order-btn{width:20px;height:20px;background:var(--bg);border:1px solid var(--bd);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.58rem;color:var(--ink-s);transition:var(--t)}
+.order-btn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.order-btn:disabled{opacity:.2;cursor:default;pointer-events:none}
+
+/* SYS INFO */
+.sys-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.sys-info-box{padding:11px;background:var(--sf2);border-radius:var(--rx);border:1px solid var(--bd)}
+.sys-info-box .lbl{font-size:.68rem;color:var(--ink-s);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.sys-info-box .val{font-size:.85rem;font-weight:600}
+.val-ok{color:var(--green)}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s ease}
+  .sidebar.open{transform:translateX(0)}
+  .main-area{margin-left:0}
+  .fg-2,.fg-3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-crest">桜</div>
+      <div class="login-title">Admin Panel</div>
+      <div class="login-sub">Sakura Nihongo Management System</div>
+    </div>
+    <div class="f-group"><label class="f-label">Username</label><input type="text" class="f-input" id="lgUser" placeholder="admin" autocomplete="username"></div>
+    <div class="f-group"><label class="f-label">Password</label><input type="password" class="f-input" id="lgPass" placeholder="••••••••" autocomplete="current-password"></div>
+    <button class="btn-login" id="lgBtn"><i class="fas fa-sign-in-alt"></i> Masuk</button>
+    <div class="login-err" id="lgErr"></div>
+  </div>
+</div>
+
+<!-- ADMIN LAYOUT -->
+<div class="admin-layout" id="adminLayout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-header">
+      <div class="sb-crest"><div class="sb-logo">桜</div><div class="sb-name">Sakura Nihongo</div></div>
+      <div class="sb-sub">Admin Management System</div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Utama</div>
+      <button class="sb-link active" data-panel="dashboard"><i class="fas fa-th-large"></i>Dashboard</button>
+      <button class="sb-link" data-panel="logo"><i class="fas fa-image"></i>Logo & Branding</button>
+      <button class="sb-link" data-panel="navbar"><i class="fas fa-bars"></i>Menu Navbar</button>
+      <button class="sb-link" data-panel="hero"><i class="fas fa-home"></i>Hero Section</button>
+      <div class="sb-section">Konten</div>
+      <button class="sb-link" data-panel="deskripsi"><i class="fas fa-file-alt"></i>Deskripsi</button>
+      <button class="sb-link" data-panel="keunggulan"><i class="fas fa-star"></i>Keunggulan</button>
+      <button class="sb-link" data-panel="kegiatan"><i class="fas fa-calendar-check"></i>Kegiatan</button>
+      <button class="sb-link" data-panel="galeri"><i class="fas fa-images"></i>Galeri & Grup</button>
+      <button class="sb-link" data-panel="team"><i class="fas fa-users"></i>Tim Pengajar</button>
+      <button class="sb-link" data-panel="footer"><i class="fas fa-align-justify"></i>Footer</button>
+      <a class="sb-link view" href="index.html" target="_blank"><i class="fas fa-external-link-alt"></i>Lihat Website</a>
+    </nav>
+    <div class="sb-foot"><button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i>Logout</button></div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-area">
+    <header class="topbar">
+      <div class="topbar-l"><span>Admin</span><span class="sep">/</span><span class="cur" id="tbCur">Dashboard</span></div>
+      <div class="topbar-r"><span class="tb-badge">admin</span><a href="index.html" target="_blank" class="btn btn-g btn-sm"><i class="fas fa-eye"></i>Preview</a></div>
+    </header>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="ph"><div><div class="ph-title">Dashboard</div><div class="ph-sub">Ringkasan konten website Sakura Nihongo</div></div></div>
+        <div class="stats-row">
+          <div class="stat-chip" onclick="sw('navbar')"><div class="stat-icon"><i class="fas fa-bars"></i></div><div class="stat-num" id="st-nb">0</div><div class="stat-lbl">Menu Navbar</div></div>
+          <div class="stat-chip" onclick="sw('galeri')"><div class="stat-icon"><i class="fas fa-images"></i></div><div class="stat-num" id="st-gl">0</div><div class="stat-lbl">Foto Galeri</div></div>
+          <div class="stat-chip" onclick="sw('galeri')"><div class="stat-icon"><i class="fas fa-layer-group"></i></div><div class="stat-num" id="st-grp">0</div><div class="stat-lbl">Grup Galeri</div></div>
+          <div class="stat-chip" onclick="sw('kegiatan')"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><div class="stat-num" id="st-kg">0</div><div class="stat-lbl">Kegiatan</div></div>
+          <div class="stat-chip" onclick="sw('team')"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-num" id="st-tm">0</div><div class="stat-lbl">Tim Pengajar</div></div>
+          <div class="stat-chip" onclick="sw('keunggulan')"><div class="stat-icon"><i class="fas fa-book-open"></i></div><div class="stat-num" id="st-mat">0</div><div class="stat-lbl">Materi</div></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-info-circle"></i></div><div><div class="card-ht">Informasi Sistem</div></div></div></div>
+          <div class="card-b">
+            <div class="sys-info-grid">
+              <div class="sys-info-box"><div class="lbl">Storage</div><div class="val val-ok">✓ LocalStorage Aktif</div></div>
+              <div class="sys-info-box"><div class="lbl">Koneksi Index</div><div class="val val-ok">✓ Terhubung Realtime</div></div>
+              <div class="sys-info-box"><div class="lbl">Terakhir Disimpan</div><div class="val" id="lastSaved">—</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGO -->
+      <div class="panel" id="panel-logo">
+        <div class="ph"><div><div class="ph-title">Logo & Branding</div><div class="ph-sub">Atur tampilan logo website</div></div><button class="btn btn-p" id="saveLogoBtn"><i class="fas fa-save"></i>Simpan</button></div>
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-image"></i></div><div><div class="card-ht">Logo Website</div></div></div></div>
+          <div class="card-b">
+            <p style="font-size:.78rem;color:var(--ink-s);margin-bottom:12px">Preview logo saat ini:</p>
+            <div class="img-preview-box" id="logoPreviewBox"><span class="ph">Belum ada logo</span></div>
+            <div class="fg-2">
+              <div class="fg"><label>URL Logo</label><input type="text" id="logoUrl" placeholder="https://example.com/logo.png"></div>
+              <div class="fg"><label>Teks Nama (fallback)</label><input type="text" id="logoText" placeholder="桜 Sakura Nihongo"></div>
+            </div>
+            <div class="fg"><label>Upload Logo (PNG/SVG/JPG)</label><input type="file" id="logoUpload" accept="image/*" style="padding:7px;border:1.5px solid var(--bd);border-radius:var(--rx);width:100%;font-size:.8rem"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAVBAR -->
+      <div class="panel" id="panel-navbar">
+        <div class="ph"><div><div class="ph-title">Menu Navbar</div><div class="ph-sub">Atur menu navigasi website</div></div></div>
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-bars"></i></div><div><div class="card-ht">Daftar Menu</div><div class="card-hs">Klik ↑↓ untuk mengatur urutan</div></div></div></div>
+          <div id="navbarItems"></div>
+          <div class="add-row">
+            <div class="add-grid" style="grid-template-columns:1fr 1fr auto">
+              <input type="text" id="newNavText" placeholder="Teks menu (cth: Beranda)">
+              <input type="text" id="newNavLink" placeholder="Link (cth: #hero)">
+              <button class="btn btn-p btn-sm" id="addNavBtn"><i class="fas fa-plus"></i>Tambah</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <div class="panel" id="panel-hero">
+        <div class="ph"><div><div class="ph-title">Hero Section</div><div class="ph-sub">Bagian utama halaman depan</div></div><button class="btn btn-p" id="saveHeroBtn"><i class="fas fa-save"></i>Simpan</button></div>
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-home"></i></div><div><div class="card-ht">Konten Hero</div></div></div></div>
+          <div class="card-b">
+            <div class="fg"><label>Judul Utama (Enter = baris baru)</label><textarea id="heroTitle" rows="2" placeholder="Belajar Bahasa&#10;Jepang Bersama Kami"></textarea></div>
+            <div class="fg"><label>Subjudul / Deskripsi</label><textarea id="heroSubtitle" rows="3"></textarea></div>
+            <div class="fg-2">
+              <div class="fg"><label>Teks Tombol CTA</label><input type="text" id="heroBtn" placeholder="Mulai Belajar"></div>
+              <div class="fg"><label>Background Image URL</label><input type="text" id="heroBg" placeholder="https://..."></div>
+            </div>
+            <div class="fg"><label>Upload Background</label><input type="file" id="heroUpload" accept="image/*" style="padding:7px;border:1.5px solid var(--bd);border-radius:var(--rx);width:100%;font-size:.8rem"></div>
+            <div id="heroBgPrev" style="margin-top:8px;width:100%;height:110px;background:var(--bg);border-radius:var(--rx);background-size:cover;background-position:center;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center"><span style="font-size:.72rem;color:var(--ink-s)">Preview background</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESKRIPSI -->
+      <div class="panel" id="panel-deskripsi">
+        <div class="ph"><div><div class="ph-title">Deskripsi Utama</div><div class="ph-sub">Bagian About / Tentang Kami</div></div><button class="btn btn-p" id="saveDeskBtn"><i class="fas fa-save"></i>Simpan</button></div>
+        <div class="card">
+          <div class="card-b">
+            <div class="fg"><label>Judul Seksi</label><input type="text" id="deskJudul" placeholder="Mengapa Belajar di Sakura Nihongo?"></div>
+            <div class="fg"><label>Paragraf 1</label><textarea id="deskTeks1" rows="4"></textarea></div>
+            <div class="fg"><label>Paragraf 2 / Filosofi</label><textarea id="deskTeks2" rows="3"></textarea></div>
+            <div class="fg-2">
+              <div class="fg"><label>URL Gambar</label><input type="text" id="deskImg" placeholder="https://..."></div>
+              <div class="fg"><label>Upload Gambar</label><input type="file" id="deskImgUpload" accept="image/*" style="padding:7px;border:1.5px solid var(--bd);border-radius:var(--rx);width:100%;font-size:.8rem"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KEUNGGULAN -->
+      <div class="panel" id="panel-keunggulan">
+        <div class="ph"><div><div class="ph-title">Keunggulan (3 Kartu)</div><div class="ph-sub">Visi Misi, Manfaat Belajar, Materi Unggulan — semua bisa CRUD</div></div><button class="btn btn-p" id="saveExcBtn"><i class="fas fa-save"></i>Simpan Semua</button></div>
+
+        <!-- Visi Misi -->
+        <div class="card">
+          <div class="card-h" style="background:rgba(201,151,58,.06)"><div class="card-hl"><div class="card-hi" style="background:rgba(201,151,58,.1);color:var(--amber)"><i class="fas fa-bullseye"></i></div><div><div class="card-ht">Kartu 1 — Visi & Misi</div></div></div></div>
+          <div class="card-b">
+            <div class="fg-2">
+              <div class="fg"><label>Judul Kartu</label><input type="text" id="c1Title" placeholder="Visi & Misi"></div>
+              <div class="fg"><label>Ikon Font Awesome</label><input type="text" id="c1Icon" placeholder="fas fa-bullseye"></div>
+            </div>
+            <div class="fg"><label>Visi</label><textarea id="visiText" rows="3"></textarea></div>
+            <div class="fg"><label>Misi</label><textarea id="misiText" rows="3"></textarea></div>
+          </div>
+        </div>
+
+        <!-- Manfaat -->
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-chalkboard-user"></i></div><div><div class="card-ht">Kartu 2 — Manfaat Belajar</div><div class="card-hs">Tambah, Edit, Hapus item manfaat</div></div></div></div>
+          <div class="card-b" style="padding-bottom:0">
+            <div class="fg-2" style="margin-bottom:8px">
+              <div class="fg"><label>Judul Kartu</label><input type="text" id="c2Title" placeholder="Manfaat Belajar"></div>
+              <div class="fg"><label>Ikon</label><input type="text" id="c2Icon" placeholder="fas fa-chalkboard-user"></div>
+            </div>
+          </div>
+          <div id="manfaatItems"></div>
+          <div class="add-row">
+            <div class="add-grid" style="grid-template-columns:1fr auto">
+              <input type="text" id="newManfaat" placeholder="Tambah manfaat baru...">
+              <button class="btn btn-p btn-sm" id="addManfaatBtn"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Materi -->
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-book-open"></i></div><div><div class="card-ht">Kartu 3 — Materi Unggulan</div><div class="card-hs">Tambah, Edit, Hapus item materi</div></div></div></div>
+          <div class="card-b" style="padding-bottom:0">
+            <div class="fg-2" style="margin-bottom:8px">
+              <div class="fg"><label>Judul Kartu</label><input type="text" id="c3Title" placeholder="Materi Unggulan"></div>
+              <div class="fg"><label>Ikon</label><input type="text" id="c3Icon" placeholder="fas fa-book-open"></div>
+            </div>
+          </div>
+          <div id="materiItems"></div>
+          <div class="add-row">
+            <div class="add-grid" style="grid-template-columns:1fr auto">
+              <input type="text" id="newMateri" placeholder="Tambah materi baru...">
+              <button class="btn btn-p btn-sm" id="addMateriBtn"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KEGIATAN -->
+      <div class="panel" id="panel-kegiatan">
+        <div class="ph"><div><div class="ph-title">Kegiatan Belajar</div><div class="ph-sub">Tambah, Edit, Hapus kegiatan</div></div></div>
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-calendar-check"></i></div><div><div class="card-ht">Daftar Kegiatan</div></div></div></div>
+          <div id="kegiatanItems"></div>
+          <div class="add-row">
+            <div class="add-grid" style="grid-template-columns:1fr auto">
+              <input type="text" id="newKegiatan" placeholder="Tambah kegiatan baru...">
+              <button class="btn btn-p btn-sm" id="addKegBtn"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-camera"></i></div><div><div class="card-ht">Gambar Kegiatan</div></div></div></div>
+          <div class="card-b">
+            <div class="fg"><label>URL Gambar</label><input type="text" id="kegImgUrl2" placeholder="https://..."></div>
+            <div class="fg"><label>Upload Gambar</label><input type="file" id="kegImgUpload" accept="image/*" style="padding:7px;border:1.5px solid var(--bd);border-radius:var(--rx);width:100%;font-size:.8rem"></div>
+            <button class="btn btn-p btn-sm" id="saveKegImgBtn"><i class="fas fa-save"></i>Simpan Gambar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GALERI & GRUP -->
+      <div class="panel" id="panel-galeri">
+        <div class="ph"><div><div class="ph-title">Galeri & Grup Foto</div><div class="ph-sub">Kelola grup dan foto dokumentasi</div></div><button class="btn btn-p" id="showAddGaleriBtn"><i class="fas fa-plus"></i>Tambah Foto</button></div>
+
+        <!-- GRUP MANAGEMENT -->
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi" style="background:var(--gold-bg);color:var(--amber)"><i class="fas fa-layer-group"></i></div><div><div class="card-ht">Manajemen Grup</div><div class="card-hs">Tambah, Edit, Hapus grup galeri</div></div></div></div>
+          <div id="grupItems"></div>
+          <div class="add-row">
+            <div class="add-grid" style="grid-template-columns:1fr 2fr auto">
+              <input type="text" id="newGrupId" placeholder="ID Grup (cth: C)" maxlength="10">
+              <input type="text" id="newGrupNama" placeholder="Nama Grup (cth: Grup C – Seni Budaya)">
+              <button class="btn btn-p btn-sm" id="addGrupBtn"><i class="fas fa-plus"></i>Tambah Grup</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADD GALERI FORM -->
+        <div class="card" id="addGaleriCard" style="display:none;border-color:var(--red);margin-bottom:14px">
+          <div class="card-h" style="background:var(--red-bg)">
+            <div class="card-hl"><div class="card-hi"><i class="fas fa-plus-circle"></i></div><div><div class="card-ht">Tambah Foto Baru</div></div></div>
+            <button class="modal-cls" id="hideAddGaleriBtn"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="card-b">
+            <div class="fg-2">
+              <div class="fg"><label>URL Gambar</label><input type="text" id="gImgUrl" placeholder="https://..."></div>
+              <div class="fg"><label>Upload Gambar</label><input type="file" id="gImgUpload" accept="image/*" style="padding:7px;border:1.5px solid var(--bd);border-radius:var(--rx);width:100%;font-size:.8rem"></div>
+            </div>
+            <div class="fg-2">
+              <div class="fg"><label>Judul</label><input type="text" id="gTitle" placeholder="Judul foto..."></div>
+              <div class="fg"><label>Grup</label><select id="gGroup"></select></div>
+            </div>
+            <div class="fg"><label>Deskripsi</label><textarea id="gDesc" rows="2" placeholder="Keterangan singkat foto..."></textarea></div>
+            <button class="btn btn-p" id="saveGaleriBtn"><i class="fas fa-save"></i>Simpan Foto</button>
+          </div>
+        </div>
+
+        <!-- FOTO LIST -->
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-images"></i></div><div><div class="card-ht">Semua Foto</div><div class="card-hs" id="galeriCount">0 foto</div></div></div></div>
+          <table class="data-tbl">
+            <thead><tr><th>#</th><th>Foto</th><th>Judul</th><th>Grup</th><th>Deskripsi</th><th>Aksi</th></tr></thead>
+            <tbody id="galeriTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TEAM -->
+      <div class="panel" id="panel-team">
+        <div class="ph"><div><div class="ph-title">Tim Pengajar</div><div class="ph-sub">Struktur organisasi & pengurus</div></div></div>
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-users"></i></div><div><div class="card-ht">Daftar Anggota</div></div></div></div>
+          <div id="teamItems"></div>
+          <div class="add-row">
+            <div class="add-grid" style="grid-template-columns:1fr 1fr">
+              <input type="text" id="newTName" placeholder="Nama (cth: Haruki Sensei)">
+              <input type="text" id="newTPos" placeholder="Jabatan (cth: Ketua)">
+            </div>
+            <div class="add-grid" style="grid-template-columns:1fr 1fr;margin-top:7px">
+              <input type="text" id="newTDesc" placeholder="Deskripsi singkat">
+              <input type="text" id="newTIcon" placeholder="Icon class (cth: fas fa-user-tie)">
+            </div>
+            <div class="add-foot"><button class="btn btn-p btn-sm" id="addTeamBtn"><i class="fas fa-user-plus"></i>Tambah Anggota</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="panel" id="panel-footer">
+        <div class="ph"><div><div class="ph-title">Footer</div><div class="ph-sub">Informasi kontak dan link sosial media</div></div><button class="btn btn-p" id="saveFooterBtn"><i class="fas fa-save"></i>Simpan</button></div>
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-link"></i></div><div><div class="card-ht">Sosial Media</div></div></div></div>
+          <div class="card-b">
+            <div class="fg-3">
+              <div class="fg"><label><i class="fab fa-youtube" style="color:#FF0000"></i> YouTube URL</label><input type="text" id="ftYt" placeholder="https://youtube.com/..."></div>
+              <div class="fg"><label><i class="fab fa-instagram" style="color:#E1306C"></i> Instagram URL</label><input type="text" id="ftIg" placeholder="https://instagram.com/..."></div>
+              <div class="fg"><label><i class="fas fa-envelope" style="color:#4A90E2"></i> Email (mailto:)</label><input type="text" id="ftEmail" placeholder="mailto:sakura@nihongo.id"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><div class="card-hl"><div class="card-hi"><i class="fas fa-address-card"></i></div><div><div class="card-ht">Informasi Kontak</div></div></div></div>
+          <div class="card-b">
+            <div class="fg-2">
+              <div class="fg"><label>Nama Sensei / Pengajar</label><input type="text" id="ftSensei" placeholder="Yuki Sensei & Takahashi Sensei"></div>
+              <div class="fg"><label>Alamat</label><input type="text" id="ftAddress" placeholder="Jakarta & Kelas Online"></div>
+            </div>
+            <div class="fg-2">
+              <div class="fg"><label>Nomor Telepon</label><input type="text" id="ftPhone" placeholder="+62 812 3456 7890"></div>
+              <div class="fg"><label>Teks Tombol Daftar</label><input type="text" id="ftBtnText" placeholder="Daftar Sekarang"></div>
+            </div>
+            <div class="fg"><label>Deskripsi CTA</label><textarea id="ftDesc" rows="2" placeholder="Hubungi kami untuk jadwal terbaru..."></textarea></div>
+            <div class="fg"><label>Teks Copyright</label><input type="text" id="ftCopyright" placeholder="&copy; 2025 Sakura Nihongo"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div><!-- /admin-layout -->
+
+<!-- MODALS -->
+<div class="modal-bd" id="editModal">
+  <div class="modal-box">
+    <div class="modal-h"><h3 id="editModalTitle">Edit Item</h3><button class="modal-cls" data-close="editModal"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body"><div class="fg"><label>Nilai</label><input type="text" id="editModalInput" placeholder="..."></div></div>
+    <div class="modal-foot"><button class="btn btn-g" data-close="editModal">Batal</button><button class="btn btn-p" id="editModalSave"><i class="fas fa-save"></i>Simpan</button></div>
+  </div>
+</div>
+
+<div class="modal-bd" id="editGrupModal">
+  <div class="modal-box">
+    <div class="modal-h"><h3>Edit Grup</h3><button class="modal-cls" data-close="editGrupModal"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="fg"><label>ID Grup (tidak bisa diubah)</label><input type="text" id="egrupId" readonly style="background:var(--bg);cursor:not-allowed"></div>
+      <div class="fg"><label>Nama Grup</label><input type="text" id="egrupNama" placeholder="Nama grup..."></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" data-close="editGrupModal">Batal</button><button class="btn btn-p" id="editGrupSave"><i class="fas fa-save"></i>Simpan</button></div>
+  </div>
+</div>
+
+<div class="modal-bd" id="editGaleriModal">
+  <div class="modal-box">
+    <div class="modal-h"><h3>Edit Foto Galeri</h3><button class="modal-cls" data-close="editGaleriModal"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="fg-2">
+        <div class="fg"><label>URL Gambar</label><input type="text" id="egImg" placeholder="https://..."></div>
+        <div class="fg"><label>Upload Gambar Baru</label><input type="file" id="egUpload" accept="image/*" style="padding:7px;border:1.5px solid var(--bd);border-radius:var(--rx);width:100%;font-size:.8rem"></div>
+      </div>
+      <div class="fg-2">
+        <div class="fg"><label>Judul</label><input type="text" id="egTitle"></div>
+        <div class="fg"><label>Grup</label><select id="egGroup"></select></div>
+      </div>
+      <div class="fg"><label>Deskripsi</label><textarea id="egDesc" rows="2"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" data-close="editGaleriModal">Batal</button><button class="btn btn-p" id="editGaleriSave"><i class="fas fa-save"></i>Simpan</button></div>
+  </div>
+</div>
+
+<div class="modal-bd" id="editTeamModal">
+  <div class="modal-box">
+    <div class="modal-h"><h3>Edit Anggota</h3><button class="modal-cls" data-close="editTeamModal"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="fg-2">
+        <div class="fg"><label>Nama</label><input type="text" id="etName"></div>
+        <div class="fg"><label>Jabatan</label><input type="text" id="etPos"></div>
+      </div>
+      <div class="fg-2">
+        <div class="fg"><label>Deskripsi</label><input type="text" id="etDesc"></div>
+        <div class="fg"><label>Icon Class</label><input type="text" id="etIcon" placeholder="fas fa-user-tie"></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-g" data-close="editTeamModal">Batal</button><button class="btn btn-p" id="editTeamSave"><i class="fas fa-save"></i>Simpan</button></div>
+  </div>
+</div>
+
+<div class="toast-cnt" id="toastCnt"></div>
+
+<script>
+(function(){
+const CREDS={user:'admin',pass:'またあいましょう'};
+const LS='sakuraNihongoData';
+const DEF={
+  logo:null,logoText:'桜 Sakura Nihongo',
+  navbar:[{text:'Beranda',link:'#hero'},{text:'Tentang',link:'#keunggulan'},{text:'Program',link:'#excellence'},{text:'Kegiatan',link:'#kegiatan'},{text:'Galeri',link:'#galeri'},{text:'Pengajar',link:'#organisasi'},{text:'Daftar',link:'#kontak',cta:true}],
+  hero:{title:'Belajar Bahasa\nJepang Bersama Kami',subtitle:'Dari Nol hingga Lancar. Metode modern, dipandu sensei berpengalaman yang telah tinggal di Jepang.',buttonText:'Mulai Belajar',backgroundImage:'https://images.pexels.com/photos/2614817/pexels-photo-2614817.jpeg?auto=compress&cs=tinysrgb&w=1600'},
+  deskripsi:{judul:'Mengapa Belajar di Sakura Nihongo?',teks1:'Kami menggabungkan metode interaktif dengan pendalaman budaya Jepang yang otentik.',teks2:'"Belajar Jepang bukan hanya tentang ujian, tetapi membuka pintu menuju peluang global."',image:'https://images.pexels.com/photos/1308940/pexels-photo-1308940.jpeg?auto=compress&cs=tinysrgb&w=800'},
+  cards:{card1:{title:'Visi & Misi',icon:'fas fa-bullseye'},card2:{title:'Manfaat Belajar',icon:'fas fa-chalkboard-user'},card3:{title:'Materi Unggulan',icon:'fas fa-book-open'}},
+  visiMisi:{visi:'Menjadi pusat pembelajaran bahasa Jepang terdepan yang membuka wawasan global.',misi:'Menyediakan pengajaran berkualitas, membangun pemahaman budaya Jepang, mencetak generasi siap berkarier.'},
+  manfaat:['Pengajar profesional & native speaker','Kelas interaktif (online/offline)','Sertifikat resmi','Fleksibel waktu & biaya terjangkau'],
+  materi:['Hiragana / Katakana','Kanji dasar (JLPT N5-N4)','Tata bahasa & percakapan','Persiapan ujian JLPT','Kelas budaya (shodo, kimono)'],
+  kegiatan:['Latihan Kaiwa (Percakapan) intensif','Menulis Kanji & Kaligrafi (Shodo)','Kelas memasak Jepang (Sushi, Okonomiyaki)','Diskusi Anime / Manga & budaya pop','Tryout JLPT & Simulasi Ujian','Nobori & Festival Budaya (Matsuri)'],
+  kegiatanImage:'https://images.pexels.com/photos/1250655/pexels-photo-1250655.jpeg?auto=compress&cs=tinysrgb&w=800',
+  galeriGrups:[{id:'A',nama:'Grup A – Latihan Percakapan'},{id:'B',nama:'Grup B – Kelas Kanji & Budaya'}],
+  galeri:[
+    {img:'https://images.pexels.com/photos/3768916/pexels-photo-3768916.jpeg?auto=compress&cs=tinysrgb&w=600',title:'Latihan Kaiwa Santai',desc:'Sesi percakapan dengan sensei dan teman sekelas.',grupId:'A'},
+    {img:'https://images.pexels.com/photos/4260325/pexels-photo-4260325.jpeg?auto=compress&cs=tinysrgb&w=600',title:'Roleplay di Restoran',desc:'Simulasi memesan makanan dalam bahasa Jepang.',grupId:'A'},
+    {img:'https://images.pexels.com/photos/4057663/pexels-photo-4057663.jpeg?auto=compress&cs=tinysrgb&w=600',title:'Debat Ringan',desc:'Meningkatkan kepercayaan diri berbicara.',grupId:'A'},
+    {img:'https://images.pexels.com/photos/162924/kyoto-japan-gion-matsuri-japanese-culture-162924.jpeg?auto=compress&cs=tinysrgb&w=600',title:'Menulis Shodo',desc:'Belajar kaligrafi Kanji bersama sensei.',grupId:'B'},
+    {img:'https://images.pexels.com/photos/267507/pexels-photo-267507.jpeg?auto=compress&cs=tinysrgb&w=600',title:'Kebaya & Kimono',desc:'Pengenalan pakaian tradisional Jepang.',grupId:'B'},
+    {img:'https://images.pexels.com/photos/1674913/pexels-photo-1674913.jpeg?auto=compress&cs=tinysrgb&w=600',title:'Latihan Kanji',desc:'Menulis huruf Jepang dengan teknik tepat.',grupId:'B'}
+  ],
+  anggota:[
+    {name:'Haruki Sensei',position:'Ketua / Head Teacher',description:'Spesialis JLPT & Budaya',icon:'fas fa-user-tie'},
+    {name:'Yuki Sensei',position:'Wakil Ketua',description:'Native Speaker, Percakapan',icon:'fas fa-user-graduate'},
+    {name:'Rina Sensei',position:'Sekretaris 1',description:'Koordinator Kelas',icon:'fas fa-user-friends'},
+    {name:'Takumi Sensei',position:'Sekretaris 2',description:'Admin & Dokumentasi',icon:'fas fa-user-edit'},
+    {name:'Maya Sensei',position:'Bendahara',description:'Manajemen Keuangan',icon:'fas fa-calculator'}
+  ],
+  footer:{youtube:'#',instagram:'#',email:'#',senseiNames:'Yuki Sensei & Takahashi Sensei',address:'Jakarta & Kelas Online',phone:'+62 812 3456 7890',copyright:'&copy; 2025 Sakura Nihongo — Semua hak dilindungi.',buttonText:'Daftar Sekarang',description:'Hubungi kami untuk jadwal terbaru, promo early bird, dan placement test gratis.'}
+};
+
+// ─── Data helpers ────────────────────────────────────────
+let D={};
+function load(){try{const s=localStorage.getItem(LS);D=s?Object.assign({},DEF,JSON.parse(s)):JSON.parse(JSON.stringify(DEF));}catch(e){D=JSON.parse(JSON.stringify(DEF));}}
+function save(msg,type){localStorage.setItem(LS,JSON.stringify(D));updateStats();document.getElementById('lastSaved').textContent=new Date().toLocaleString('id-ID');toast(msg||'✅ Tersimpan!',type);}
+function esc(s){if(!s)return'';return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+
+// ─── Toast ────────────────────────────────────────────────
+function toast(msg,type){const tc=document.getElementById('toastCnt');const el=document.createElement('div');el.className='toast'+(type?' '+type:'');const ico=type==='err'?'fa-circle-xmark':type==='warn'?'fa-triangle-exclamation':'fa-circle-check';el.innerHTML=`<i class="fas ${ico} toast-ico"></i><span>${msg}</span>`;tc.appendChild(el);setTimeout(()=>el.remove(),3200);}
+
+// ─── Stats ────────────────────────────────────────────────
+function updateStats(){
+  document.getElementById('st-nb').textContent=(D.navbar||[]).length;
+  document.getElementById('st-gl').textContent=(D.galeri||[]).length;
+  document.getElementById('st-grp').textContent=(D.galeriGrups||[]).length;
+  document.getElementById('st-kg').textContent=(D.kegiatan||[]).length;
+  document.getElementById('st-tm').textContent=(D.anggota||[]).length;
+  document.getElementById('st-mat').textContent=(D.materi||[]).length;
+  document.getElementById('galeriCount').textContent=(D.galeri||[]).length+' foto';
+}
+
+// ─── Panel switch ─────────────────────────────────────────
+function sw(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  const p=document.getElementById('panel-'+name);if(p)p.classList.add('active');
+  const l=document.querySelector(`.sb-link[data-panel="${name}"]`);if(l)l.classList.add('active');
+  const labs={dashboard:'Dashboard',logo:'Logo & Branding',navbar:'Menu Navbar',hero:'Hero Section',deskripsi:'Deskripsi',keunggulan:'Keunggulan',kegiatan:'Kegiatan',galeri:'Galeri & Grup',team:'Tim Pengajar',footer:'Footer'};
+  document.getElementById('tbCur').textContent=labs[name]||name;
+  loadPanel(name);
+}
+window.sw=sw;
+
+document.querySelectorAll('.sb-link[data-panel]').forEach(btn=>btn.addEventListener('click',()=>sw(btn.dataset.panel)));
+
+function loadPanel(name){
+  if(name==='logo')loadLogo();
+  else if(name==='navbar')renderNavbar();
+  else if(name==='hero')loadHero();
+  else if(name==='deskripsi')loadDesk();
+  else if(name==='keunggulan')loadKeunggulan();
+  else if(name==='kegiatan')renderKegiatan();
+  else if(name==='galeri'){renderGrupItems();renderGaleri();updateGrupSelects();}
+  else if(name==='team')renderTeam();
+  else if(name==='footer')loadFooter();
+}
+
+// ─── LOGO ─────────────────────────────────────────────────
+function loadLogo(){
+  document.getElementById('logoUrl').value=D.logo||'';
+  document.getElementById('logoText').value=D.logoText||'';
+  const box=document.getElementById('logoPreviewBox');
+  box.innerHTML=D.logo?`<img src="${esc(D.logo)}" alt="Logo">`:`<span class="ph">Belum ada logo</span>`;
+}
+document.getElementById('saveLogoBtn').addEventListener('click',()=>{
+  const url=document.getElementById('logoUrl').value.trim();
+  const file=document.getElementById('logoUpload').files[0];
+  D.logoText=document.getElementById('logoText').value.trim()||'桜 Sakura Nihongo';
+  if(file){const r=new FileReader();r.onload=e=>{D.logo=e.target.result;save('✅ Logo tersimpan!');loadLogo();};r.readAsDataURL(file);}
+  else{D.logo=url||null;save('✅ Logo tersimpan!');loadLogo();}
+});
+
+// ─── NAVBAR ───────────────────────────────────────────────
+function renderNavbar(){
+  const c=document.getElementById('navbarItems');
+  if(!D.navbar||!D.navbar.length){c.innerHTML='<div class="empty-state"><i class="fas fa-bars"></i><p>Belum ada menu navbar</p></div>';return;}
+  c.innerHTML=D.navbar.map((item,i)=>`
+    <div class="item-row">
+      <div class="ir-handle"><i class="fas fa-grip-vertical"></i></div>
+      <div class="order-btns">
+        <button class="order-btn nav-up" data-i="${i}" ${i===0?'disabled':''}><i class="fas fa-chevron-up"></i></button>
+        <button class="order-btn nav-dn" data-i="${i}" ${i===D.navbar.length-1?'disabled':''}><i class="fas fa-chevron-down"></i></button>
+      </div>
+      <div class="ir-content">
+        <div class="ir-title">${esc(item.text)} ${item.cta?'<span class="badge badge-red">CTA</span>':''}</div>
+        <div class="ir-meta">${esc(item.link)}</div>
+      </div>
+      <div class="ir-actions">
+        <button class="btn btn-w btn-xs nav-edit" data-i="${i}"><i class="fas fa-pen"></i>Edit</button>
+        <button class="btn btn-d btn-xs nav-del" data-i="${i}"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+  c.querySelectorAll('.nav-up').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.i;if(i>0){[D.navbar[i-1],D.navbar[i]]=[D.navbar[i],D.navbar[i-1]];save('↑ Urutan diubah');renderNavbar();}}));
+  c.querySelectorAll('.nav-dn').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.i;if(i<D.navbar.length-1){[D.navbar[i+1],D.navbar[i]]=[D.navbar[i],D.navbar[i+1]];save('↓ Urutan diubah');renderNavbar();}}));
+  c.querySelectorAll('.nav-del').forEach(b=>b.addEventListener('click',()=>{if(confirm('Hapus menu ini?')){D.navbar.splice(+b.dataset.i,1);save('🗑 Menu dihapus','warn');renderNavbar();}}));
+  c.querySelectorAll('.nav-edit').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.i;
+    const t=prompt('Edit teks menu:',D.navbar[i].text);
+    if(t!==null&&t.trim()){
+      const l=prompt('Edit link:',D.navbar[i].link);
+      if(l!==null){D.navbar[i].text=t.trim();D.navbar[i].link=l.trim();save('✅ Menu diperbarui');renderNavbar();}
+    }
+  }));
+}
+document.getElementById('addNavBtn').addEventListener('click',()=>{
+  const t=document.getElementById('newNavText').value.trim();
+  const l=document.getElementById('newNavLink').value.trim();
+  if(!t||!l){toast('Teks & link wajib diisi!','err');return;}
+  D.navbar.push({text:t,link:l});save('✅ Menu ditambahkan');
+  document.getElementById('newNavText').value='';document.getElementById('newNavLink').value='';
+  renderNavbar();
+});
+
+// ─── HERO ─────────────────────────────────────────────────
+function loadHero(){
+  document.getElementById('heroTitle').value=D.hero.title||'';
+  document.getElementById('heroSubtitle').value=D.hero.subtitle||'';
+  document.getElementById('heroBtn').value=D.hero.buttonText||'';
+  document.getElementById('heroBg').value=D.hero.backgroundImage||'';
+  updateHeroPrev(D.hero.backgroundImage);
+}
+function updateHeroPrev(url){
+  const p=document.getElementById('heroBgPrev');
+  if(url){p.style.backgroundImage=`url('${url}')`;p.innerHTML='';}
+  else{p.style.backgroundImage='';p.innerHTML='<span style="font-size:.72rem;color:var(--ink-s)">Preview background</span>';}
+}
+document.getElementById('heroBg').addEventListener('input',e=>updateHeroPrev(e.target.value));
+document.getElementById('saveHeroBtn').addEventListener('click',()=>{
+  const file=document.getElementById('heroUpload').files[0];
+  const doSave=(bg)=>{D.hero={title:document.getElementById('heroTitle').value,subtitle:document.getElementById('heroSubtitle').value,buttonText:document.getElementById('heroBtn').value,backgroundImage:bg||D.hero.backgroundImage};save('✅ Hero tersimpan!');loadHero();};
+  if(file){const r=new FileReader();r.onload=e=>doSave(e.target.result);r.readAsDataURL(file);}
+  else doSave(document.getElementById('heroBg').value.trim());
+});
+
+// ─── DESKRIPSI ────────────────────────────────────────────
+function loadDesk(){
+  document.getElementById('deskJudul').value=D.deskripsi.judul||'';
+  document.getElementById('deskTeks1').value=D.deskripsi.teks1||'';
+  document.getElementById('deskTeks2').value=D.deskripsi.teks2||'';
+  document.getElementById('deskImg').value=D.deskripsi.image||'';
+}
+document.getElementById('saveDeskBtn').addEventListener('click',()=>{
+  const file=document.getElementById('deskImgUpload').files[0];
+  const doSave=(img)=>{D.deskripsi={judul:document.getElementById('deskJudul').value,teks1:document.getElementById('deskTeks1').value,teks2:document.getElementById('deskTeks2').value,image:img||D.deskripsi.image};save('✅ Deskripsi tersimpan!');};
+  if(file){const r=new FileReader();r.onload=e=>doSave(e.target.result);r.readAsDataURL(file);}
+  else doSave(document.getElementById('deskImg').value.trim());
+});
+
+// ─── KEUNGGULAN ───────────────────────────────────────────
+function loadKeunggulan(){
+  document.getElementById('c1Title').value=D.cards.card1.title;document.getElementById('c1Icon').value=D.cards.card1.icon;
+  document.getElementById('c2Title').value=D.cards.card2.title;document.getElementById('c2Icon').value=D.cards.card2.icon;
+  document.getElementById('c3Title').value=D.cards.card3.title;document.getElementById('c3Icon').value=D.cards.card3.icon;
+  document.getElementById('visiText').value=D.visiMisi.visi;
+  document.getElementById('misiText').value=D.visiMisi.misi;
+  renderSimpleList('manfaatItems',D.manfaat,
+    i=>{D.manfaat.splice(i,1);save('🗑 Manfaat dihapus','warn');loadKeunggulan();},
+    (i,v)=>{D.manfaat[i]=v;save('✅ Manfaat diperbarui');loadKeunggulan();});
+  renderSimpleList('materiItems',D.materi,
+    i=>{D.materi.splice(i,1);save('🗑 Materi dihapus','warn');loadKeunggulan();},
+    (i,v)=>{D.materi[i]=v;save('✅ Materi diperbarui');loadKeunggulan();});
+}
+document.getElementById('saveExcBtn').addEventListener('click',()=>{
+  D.cards.card1={title:document.getElementById('c1Title').value,icon:document.getElementById('c1Icon').value};
+  D.cards.card2={title:document.getElementById('c2Title').value,icon:document.getElementById('c2Icon').value};
+  D.cards.card3={title:document.getElementById('c3Title').value,icon:document.getElementById('c3Icon').value};
+  D.visiMisi={visi:document.getElementById('visiText').value,misi:document.getElementById('misiText').value};
+  save('✅ Keunggulan tersimpan!');
+});
+document.getElementById('addManfaatBtn').addEventListener('click',()=>{
+  const v=document.getElementById('newManfaat').value.trim();
+  if(!v){toast('Masukkan teks manfaat!','err');return;}
+  D.manfaat.push(v);save('✅ Manfaat ditambahkan');document.getElementById('newManfaat').value='';loadKeunggulan();
+});
+document.getElementById('addMateriBtn').addEventListener('click',()=>{
+  const v=document.getElementById('newMateri').value.trim();
+  if(!v){toast('Masukkan teks materi!','err');return;}
+  D.materi.push(v);save('✅ Materi ditambahkan');document.getElementById('newMateri').value='';loadKeunggulan();
+});
+
+// ─── KEGIATAN ─────────────────────────────────────────────
+function renderKegiatan(){
+  document.getElementById('kegImgUrl2').value=D.kegiatanImage||'';
+  renderSimpleList('kegiatanItems',D.kegiatan,
+    i=>{D.kegiatan.splice(i,1);save('🗑 Kegiatan dihapus','warn');renderKegiatan();},
+    (i,v)=>{D.kegiatan[i]=v;save('✅ Kegiatan diperbarui');renderKegiatan();});
+}
+document.getElementById('addKegBtn').addEventListener('click',()=>{
+  const v=document.getElementById('newKegiatan').value.trim();
+  if(!v){toast('Masukkan teks kegiatan!','err');return;}
+  D.kegiatan.push(v);save('✅ Kegiatan ditambahkan');document.getElementById('newKegiatan').value='';renderKegiatan();
+});
+document.getElementById('saveKegImgBtn').addEventListener('click',()=>{
+  const file=document.getElementById('kegImgUpload').files[0];
+  const url=document.getElementById('kegImgUrl2').value.trim();
+  if(file){const r=new FileReader();r.onload=e=>{D.kegiatanImage=e.target.result;save('✅ Gambar tersimpan!');};r.readAsDataURL(file);}
+  else if(url){D.kegiatanImage=url;save('✅ Gambar tersimpan!');}
+  else toast('Masukkan URL atau pilih file!','err');
+});
+
+// ─── GALERI GRUPS ─────────────────────────────────────────
+function updateGrupSelects(){
+  const grups=D.galeriGrups||[];
+  const opts=grups.map(g=>`<option value="${esc(g.id)}">${esc(g.nama)}</option>`).join('');
+  ['gGroup','egGroup'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
+}
+function renderGrupItems(){
+  const c=document.getElementById('grupItems');
+  const grups=D.galeriGrups||[];
+  if(!grups.length){c.innerHTML='<div class="empty-state"><i class="fas fa-layer-group"></i><p>Belum ada grup</p></div>';return;}
+  c.innerHTML=grups.map((g,i)=>`
+    <div class="item-row">
+      <div class="ir-handle"><i class="fas fa-grip-vertical"></i></div>
+      <div class="ir-content">
+        <div class="ir-title"><span class="badge badge-gold">${esc(g.id)}</span> ${esc(g.nama)}</div>
+        <div class="ir-meta">${(D.galeri||[]).filter(gal=>gal.grupId===g.id).length} foto</div>
+      </div>
+      <div class="ir-actions">
+        <button class="btn btn-w btn-xs grup-edit" data-i="${i}"><i class="fas fa-pen"></i>Edit</button>
+        <button class="btn btn-d btn-xs grup-del" data-i="${i}"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+  c.querySelectorAll('.grup-del').forEach(b=>b.addEventListener('click',()=>{
+    const g=D.galeriGrups[+b.dataset.i];
+    const hasPhotos=(D.galeri||[]).some(gal=>gal.grupId===g.id);
+    if(hasPhotos&&!confirm(`Grup "${g.nama}" memiliki foto. Foto akan kehilangan grupnya. Hapus grup?`))return;
+    if(!hasPhotos&&!confirm(`Hapus grup "${g.nama}"?`))return;
+    D.galeriGrups.splice(+b.dataset.i,1);
+    save('🗑 Grup dihapus','warn');renderGrupItems();updateGrupSelects();
+  }));
+  c.querySelectorAll('.grup-edit').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.i;const g=D.galeriGrups[i];
+    document.getElementById('egrupId').value=g.id;
+    document.getElementById('egrupNama').value=g.nama;
+    openModal('editGrupModal');
+    document.getElementById('editGrupModal').dataset.idx=i;
+  }));
+}
+document.getElementById('addGrupBtn').addEventListener('click',()=>{
+  const id=document.getElementById('newGrupId').value.trim().toUpperCase();
+  const nama=document.getElementById('newGrupNama').value.trim();
+  if(!id||!nama){toast('ID dan Nama grup wajib diisi!','err');return;}
+  if((D.galeriGrups||[]).some(g=>g.id===id)){toast('ID grup sudah digunakan!','err');return;}
+  if(!D.galeriGrups)D.galeriGrups=[];
+  D.galeriGrups.push({id,nama});
+  save('✅ Grup ditambahkan!');
+  document.getElementById('newGrupId').value='';document.getElementById('newGrupNama').value='';
+  renderGrupItems();updateGrupSelects();
+});
+document.getElementById('editGrupSave').addEventListener('click',()=>{
+  const i=+document.getElementById('editGrupModal').dataset.idx;
+  const nama=document.getElementById('egrupNama').value.trim();
+  if(!nama){toast('Nama wajib diisi!','err');return;}
+  D.galeriGrups[i].nama=nama;
+  save('✅ Grup diperbarui!');closeModal('editGrupModal');renderGrupItems();updateGrupSelects();renderGaleri();
+});
+
+// ─── GALERI ───────────────────────────────────────────────
+function renderGaleri(){
+  updateStats();
+  const tb=document.getElementById('galeriTbody');
+  const grups=D.galeriGrups||[];
+  if(!D.galeri||!D.galeri.length){tb.innerHTML='<tr><td colspan="6"><div class="empty-state"><i class="fas fa-images"></i><p>Belum ada foto galeri</p></div></td></tr>';return;}
+  tb.innerHTML=D.galeri.map((g,i)=>{
+    const grp=grups.find(gr=>gr.id===g.grupId);
+    return`<tr>
+      <td>${i+1}</td>
+      <td><img class="gallery-thumb" src="${esc(g.img)}" alt="${esc(g.title)}" onerror="this.style.opacity='.2'"></td>
+      <td><strong>${esc(g.title)}</strong></td>
+      <td><span class="badge badge-gold">${esc(grp?grp.nama.substring(0,12)+'...':g.grupId)}</span></td>
+      <td style="max-width:140px"><span style="font-size:.73rem;color:var(--ink-s)">${esc(g.desc)}</span></td>
+      <td><div class="tbl-actions"><button class="btn btn-w btn-xs g-edit" data-i="${i}"><i class="fas fa-pen"></i>Edit</button><button class="btn btn-d btn-xs g-del" data-i="${i}"><i class="fas fa-trash"></i></button></div></td>
+    </tr>`;
+  }).join('');
+  tb.querySelectorAll('.g-del').forEach(b=>b.addEventListener('click',()=>{if(confirm('Hapus foto ini?')){D.galeri.splice(+b.dataset.i,1);save('🗑 Foto dihapus','warn');renderGaleri();}}));
+  tb.querySelectorAll('.g-edit').forEach(b=>b.addEventListener('click',()=>openEditGaleri(+b.dataset.i)));
+}
+document.getElementById('showAddGaleriBtn').addEventListener('click',()=>{
+  const c=document.getElementById('addGaleriCard');c.style.display=c.style.display==='none'?'block':'none';
+});
+document.getElementById('hideAddGaleriBtn').addEventListener('click',()=>{document.getElementById('addGaleriCard').style.display='none';});
+document.getElementById('saveGaleriBtn').addEventListener('click',()=>{
+  const url=document.getElementById('gImgUrl').value.trim();
+  const file=document.getElementById('gImgUpload').files[0];
+  const title=document.getElementById('gTitle').value.trim();
+  const desc=document.getElementById('gDesc').value.trim();
+  const sel=document.getElementById('gGroup');
+  const grupId=sel.value;
+  if(!title){toast('Judul wajib diisi!','err');return;}
+  const addG=(img)=>{
+    if(!img){toast('Gambar wajib diisi!','err');return;}
+    if(!D.galeri)D.galeri=[];
+    D.galeri.push({img,title,desc,grupId});
+    save('✅ Foto ditambahkan!');
+    document.getElementById('gImgUrl').value='';document.getElementById('gTitle').value='';document.getElementById('gDesc').value='';
+    document.getElementById('gImgUpload').value='';
+    document.getElementById('addGaleriCard').style.display='none';
+    renderGaleri();
+  };
+  if(file){const r=new FileReader();r.onload=e=>addG(e.target.result);r.readAsDataURL(file);}
+  else addG(url);
+});
+
+let editGaleriIdx=-1;
+function openEditGaleri(i){
+  editGaleriIdx=i;const g=D.galeri[i];
+  document.getElementById('egImg').value=g.img;
+  document.getElementById('egTitle').value=g.title;
+  document.getElementById('egDesc').value=g.desc;
+  updateGrupSelects();
+  document.getElementById('egGroup').value=g.grupId;
+  document.getElementById('egUpload').value='';
+  openModal('editGaleriModal');
+}
+document.getElementById('editGaleriSave').addEventListener('click',()=>{
+  const i=editGaleriIdx;if(i<0)return;
+  const file=document.getElementById('egUpload').files[0];
+  const title=document.getElementById('egTitle').value.trim();
+  const desc=document.getElementById('egDesc').value.trim();
+  const grupId=document.getElementById('egGroup').value;
+  if(!title){toast('Judul wajib diisi!','err');return;}
+  const doSave=(img)=>{D.galeri[i]={img:img||D.galeri[i].img,title,desc,grupId};save('✅ Foto diperbarui!');closeModal('editGaleriModal');renderGaleri();};
+  if(file){const r=new FileReader();r.onload=e=>doSave(e.target.result);r.readAsDataURL(file);}
+  else doSave(document.getElementById('egImg').value.trim());
+});
+
+// ─── TEAM ─────────────────────────────────────────────────
+function renderTeam(){
+  const c=document.getElementById('teamItems');
+  if(!D.anggota||!D.anggota.length){c.innerHTML='<div class="empty-state"><i class="fas fa-users"></i><p>Belum ada anggota tim</p></div>';return;}
+  c.innerHTML=D.anggota.map((m,i)=>`
+    <div class="item-row">
+      <div class="ir-handle"><i class="fas fa-grip-vertical"></i></div>
+      <div style="width:34px;height:34px;background:var(--red-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--red);flex-shrink:0;font-size:.82rem"><i class="${esc(m.icon||'fas fa-user')}"></i></div>
+      <div class="ir-content">
+        <div class="ir-title">${esc(m.name)}</div>
+        <div class="ir-meta">${esc(m.position)} · ${esc(m.description)}</div>
+      </div>
+      <div class="ir-actions">
+        <button class="btn btn-w btn-xs t-edit" data-i="${i}"><i class="fas fa-pen"></i>Edit</button>
+        <button class="btn btn-d btn-xs t-del" data-i="${i}"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+  c.querySelectorAll('.t-del').forEach(b=>b.addEventListener('click',()=>{if(confirm('Hapus anggota ini?')){D.anggota.splice(+b.dataset.i,1);save('🗑 Anggota dihapus','warn');renderTeam();}}));
+  c.querySelectorAll('.t-edit').forEach(b=>b.addEventListener('click',()=>openEditTeam(+b.dataset.i)));
+}
+document.getElementById('addTeamBtn').addEventListener('click',()=>{
+  const name=document.getElementById('newTName').value.trim();
+  const pos=document.getElementById('newTPos').value.trim();
+  const desc=document.getElementById('newTDesc').value.trim();
+  const icon=document.getElementById('newTIcon').value.trim();
+  if(!name){toast('Nama wajib diisi!','err');return;}
+  if(!D.anggota)D.anggota=[];
+  D.anggota.push({name,position:pos,description:desc,icon:icon||'fas fa-user'});
+  save('✅ Anggota ditambahkan!');
+  document.getElementById('newTName').value='';document.getElementById('newTPos').value='';
+  document.getElementById('newTDesc').value='';document.getElementById('newTIcon').value='';
+  renderTeam();
+});
+let editTeamIdx=-1;
+function openEditTeam(i){
+  editTeamIdx=i;const m=D.anggota[i];
+  document.getElementById('etName').value=m.name;document.getElementById('etPos').value=m.position;
+  document.getElementById('etDesc').value=m.description;document.getElementById('etIcon').value=m.icon||'';
+  openModal('editTeamModal');
+}
+document.getElementById('editTeamSave').addEventListener('click',()=>{
+  const i=editTeamIdx;if(i<0)return;
+  const name=document.getElementById('etName').value.trim();
+  if(!name){toast('Nama wajib diisi!','err');return;}
+  D.anggota[i]={name,position:document.getElementById('etPos').value.trim(),description:document.getElementById('etDesc').value.trim(),icon:document.getElementById('etIcon').value.trim()||'fas fa-user'};
+  save('✅ Anggota diperbarui!');closeModal('editTeamModal');renderTeam();
+});
+
+// ─── FOOTER ───────────────────────────────────────────────
+function loadFooter(){
+  document.getElementById('ftYt').value=D.footer.youtube||'';
+  document.getElementById('ftIg').value=D.footer.instagram||'';
+  document.getElementById('ftEmail').value=D.footer.email||'';
+  document.getElementById('ftSensei').value=D.footer.senseiNames||'';
+  document.getElementById('ftAddress').value=D.footer.address||'';
+  document.getElementById('ftPhone').value=D.footer.phone||'';
+  document.getElementById('ftBtnText').value=D.footer.buttonText||'';
+  document.getElementById('ftDesc').value=D.footer.description||'';
+  document.getElementById('ftCopyright').value=D.footer.copyright||'';
+}
+document.getElementById('saveFooterBtn').addEventListener('click',()=>{
+  D.footer={youtube:document.getElementById('ftYt').value,instagram:document.getElementById('ftIg').value,email:document.getElementById('ftEmail').value,senseiNames:document.getElementById('ftSensei').value,address:document.getElementById('ftAddress').value,phone:document.getElementById('ftPhone').value,buttonText:document.getElementById('ftBtnText').value,description:document.getElementById('ftDesc').value,copyright:document.getElementById('ftCopyright').value};
+  save('✅ Footer tersimpan!');
+});
+
+// ─── SIMPLE LIST ──────────────────────────────────────────
+function renderSimpleList(containerId,items,onDel,onEdit){
+  const c=document.getElementById(containerId);
+  if(!items||!items.length){c.innerHTML='<div class="empty-state"><i class="fas fa-list"></i><p>Belum ada item</p></div>';return;}
+  c.innerHTML=items.map((item,i)=>`
+    <div class="item-row">
+      <div class="ir-handle"><i class="fas fa-grip-vertical"></i></div>
+      <div class="ir-content"><div class="ir-title">${esc(item)}</div></div>
+      <div class="ir-actions">
+        <button class="btn btn-w btn-xs sl-edit" data-cid="${containerId}" data-i="${i}"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-d btn-xs sl-del" data-cid="${containerId}" data-i="${i}"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+  c.querySelectorAll('.sl-del').forEach(b=>b.addEventListener('click',()=>{if(confirm('Hapus item ini?'))onDel(+b.dataset.i);}));
+  c.querySelectorAll('.sl-edit').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.i;
+    document.getElementById('editModalInput').value=items[i];
+    document.getElementById('editModalTitle').textContent='Edit Item';
+    document.getElementById('editModal').dataset.cid=b.dataset.cid;
+    document.getElementById('editModal').dataset.idx=i;
+    openModal('editModal');
+    // store callback
+    editModalCb=(val)=>{onEdit(i,val);};
+  }));
+}
+let editModalCb=null;
+document.getElementById('editModalSave').addEventListener('click',()=>{
+  const val=document.getElementById('editModalInput').value.trim();
+  if(!val){toast('Nilai tidak boleh kosong!','err');return;}
+  if(editModalCb)editModalCb(val);
+  closeModal('editModal');editModalCb=null;
+});
+
+// ─── MODAL HELPERS ────────────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.close)));
+document.querySelectorAll('.modal-bd').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id);}));
+
+// ─── LOGIN / LOGOUT ───────────────────────────────────────
+function showAdmin(){
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('adminLayout').classList.add('active');
+  load();updateStats();sw('dashboard');
+}
+document.getElementById('lgBtn').addEventListener('click',()=>{
+  const u=document.getElementById('lgUser').value;
+  const p=document.getElementById('lgPass').value;
+  if(u===CREDS.user&&p===CREDS.pass){
+    sessionStorage.setItem('snAdmin','1');
+    document.getElementById('lgErr').textContent='';
+    showAdmin();
+  }else{
+    document.getElementById('lgErr').textContent='⚠️ Username atau password salah';
+  }
+});
+document.getElementById('lgPass').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lgBtn').click();});
+document.getElementById('logoutBtn').addEventListener('click',()=>{
+  sessionStorage.removeItem('snAdmin');
+  document.getElementById('adminLayout').classList.remove('active');
+  document.getElementById('loginWrap').style.display='flex';
+  document.getElementById('lgUser').value='';document.getElementById('lgPass').value='';
+});
+if(sessionStorage.getItem('snAdmin')==='1')showAdmin();
+
+})();
+</script>
+</body>
+</html>
